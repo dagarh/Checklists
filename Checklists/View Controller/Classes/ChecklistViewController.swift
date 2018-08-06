@@ -71,6 +71,7 @@ extension ChecklistViewController : AddItemViewControllerDelegate {
     func addItemViewControllerDidCancel(_ controller: AddItemViewController) {
         
         // This will pop AddItemViewController screen.
+        /* Since we are sending the reference of "AddItemViewController" here, hence we can not pop it in AddItemViewController. */
         navigationController?.popViewController(animated: true)
     }
     
@@ -85,6 +86,8 @@ extension ChecklistViewController : AddItemViewControllerDelegate {
         /* This would call cellForRowAt method and that will fetch the data from array for displaying the corresponding cell. This is a much better way than reloading the whole tableview. */
         tableView.insertRows(at: indexPaths, with: .automatic)
         
+        /* Since we are sending the reference of "AddItemViewController" here, hence we can not pop it in AddItemViewController. */
+        navigationController?.popViewController(animated: true)
     }
     
     

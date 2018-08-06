@@ -46,7 +46,6 @@ class AddItemViewController: UITableViewController {
     @IBAction func donePressed(_ sender: Any) {
         print(type(of: sender))
         delegate?.addItemViewController(self, didFinishEditing: ChecklistItem(text: textField.text!, done: false))
-        navigationController?.popViewController(animated: true)
     }
     
     // MARK: - TableView Delegate Method
