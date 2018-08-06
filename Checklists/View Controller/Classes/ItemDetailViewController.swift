@@ -9,15 +9,15 @@
 import UIKit
 
 
-class AddItemViewController: UITableViewController {
+class ItemDetailViewController: UITableViewController {
 
+    var itemToEdit : ChecklistItem?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.largeTitleDisplayMode = .never
-        textField.delegate = self
-        
-        textField.addTarget(nil, action: #selector(donePressed), for: UIControlEvents.editingDidEndOnExit)
-        
+        // For individual-2 UI elements we should always make separate methods.
+        configureTextField()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -25,20 +25,29 @@ class AddItemViewController: UITableViewController {
     }
     
     /* weak means it is not increasing the reference counting towards the delegate object. */
-    weak var delegate : AddItemViewControllerDelegate?
+    weak var delegate : ItemDetailViewControllerDelegate?
     
     //MARK: - Outlets Connection
+    
+    /* Since we are using static cells, so we can make outlet connections in this same class, if it was dynamic cell then we could have used its own custom cell class. */
     @IBOutlet weak var textField: UITextField!
+    
     @IBOutlet weak var doneBarButton: UIBarButtonItem!
     
     //MARK: - Action Methods Connection
     @IBAction func cancelPressed(_ sender: UIBarButtonItem) {
-        delegate?.addItemViewControllerDidCancel(self)
+        delegate?.itemDetailViewControllerDidCancel(self)
     }
     
+    /* This would be called when pressing "+" or "Return" key of keyboard. */
     @IBAction func donePressed(_ sender: Any) {
         print(type(of: sender))
-        delegate?.addItemViewController(self, didFinishEditing: ChecklistItem(text: textField.text!, done: false))
+        if let itemToEdit = itemToEdit {
+            itemToEdit.text = textField.text!
+            delegate?.itemDetailViewController(self, didFinishEditing: itemToEdit)
+        }else {
+            delegate?.itemDetailViewController(self, didFinishAdding: ChecklistItem(text: textField.text!, done: false))
+        }
     }
     
     // MARK: - TableView Delegate Method
@@ -56,17 +65,35 @@ class AddItemViewController: UITableViewController {
             doneBarButton.isEnabled = true
         }
     }
+    
+    //MARK: - Configuration Methods
+    
+    func configureTextField() {
+        textField.delegate = self
+        textField.addTarget(nil, action: #selector(donePressed), for: UIControlEvents.editingDidEndOnExit)
+        if let item = itemToEdit {
+            
+            // This is the title property coming from UIViewController
+            title = "Edit Item"
+            
+            textField.text = item.text
+            textField.placeholder = "Edit an Item"
+            doneBarButton.isEnabled = true
+        } else {
+            textField.placeholder = "Add an Item"
+            doneBarButton.isEnabled = false
+        }
+    }
    
 }
 
-extension AddItemViewController : UITextFieldDelegate {
+extension ItemDetailViewController : UITextFieldDelegate {
     // MARK: - TextField Delegate Methods
 
     // See the "editingChanged" UIControl method above, regarding textField.
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
         // This would be called after textFieldShouldBeginEditing and only if textFieldShouldBeginEditing returns true.
-        doneBarButton.isEnabled = false
         print("Did Begin Editing")
     }
     

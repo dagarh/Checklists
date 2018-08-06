@@ -38,33 +38,46 @@ class ChecklistViewController: UITableViewController {
  
     //MARK: - Action Methods Connection
     @IBAction func addItem(_ sender: UIBarButtonItem) {
-        performSegue(withIdentifier: "goToAddItem", sender: self)
+        performSegue(withIdentifier: "addItem", sender: self)
     }
     
     //MARK: - Seque Related Method
     /* This method would get called by performSegue and for any kind of segue, this could be called hence make sure to filter things up. */
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "goToAddItem" {
-            let addItemVC = segue.destination as! AddItemViewController
+        if segue.identifier == "addItem" {
+            let addItemVC = segue.destination as! ItemDetailViewController
             addItemVC.delegate = self
+        } else if segue.identifier == "editItem" {
+            let addItemVC = segue.destination as! ItemDetailViewController
+            addItemVC.delegate = self
+            
+            // sender is IndexPath, using this index path you can fetch row also from tableView.
+            if let indexPath = sender as? IndexPath {
+                /*
+                 Always remember that whenever you are sending data forward then don't use UI elements properties directly, instead create some temporary stored property in the receiver class and then use that.
+                 
+                 addItemVC.textField.text = checklistItems.itemArray[indexPath.row].text
+                 */
+                addItemVC.itemToEdit = checklistItems.itemArray[indexPath.row]
+            }
         }
         
     }
     
 }
 
-extension ChecklistViewController : AddItemViewControllerDelegate {
+extension ChecklistViewController : ItemDetailViewControllerDelegate {
     
     //MARK: - AddItemViewControllerDelegate Protocol Methods Implementation
     
-    func addItemViewControllerDidCancel(_ controller: AddItemViewController) {
+    func itemDetailViewControllerDidCancel(_ controller: ItemDetailViewController) {
         
         // This will pop AddItemViewController screen.
         /* Since we are sending the reference of "AddItemViewController" here, hence we can not pop it in AddItemViewController. */
         navigationController?.popViewController(animated: true)
     }
     
-    func addItemViewController(_ controller: AddItemViewController, didFinishEditing item: ChecklistItem) {
+    func itemDetailViewController(_ controller: ItemDetailViewController, didFinishAdding item: ChecklistItem) {
         
         let newRowIndex = checklistItems.itemArray.count
         checklistItems.append(item)
@@ -76,6 +89,17 @@ extension ChecklistViewController : AddItemViewControllerDelegate {
         
         /* Since we are sending the reference of "AddItemViewController" here, hence we can not pop it in AddItemViewController. */
         navigationController?.popViewController(animated: true)
+    }
+    
+    func itemDetailViewController(_ controller: ItemDetailViewController, didFinishEditing item: ChecklistItem) {
+        
+        if let index = checklistItems.itemArray.index(of: item) {
+            let indexPath = IndexPath(row: index, section: 0)
+            tableView.reloadRows(at: [indexPath], with: .automatic)
+        }
+        
+        navigationController?.popViewController(animated: true)
+        
     }
     
     
@@ -91,7 +115,9 @@ extension ChecklistViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ChecklistItem", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "ChecklistItem", for: indexPath) as! CustomTableViewCell
+        
+        configureCell(cell)
         
         let item = checklistItems.itemArray[indexPath.row]
         configureText(for: cell, with: item)
@@ -102,13 +128,16 @@ extension ChecklistViewController {
     }
     
     //MARK: - Some Configure Methods
-    func configureText(for cell: UITableViewCell,with item: ChecklistItem) {
-        let label = cell.contentView.viewWithTag(1000) as! UILabel // better to use as? but here we know that it is a label.
-        label.text = item.text
+    func configureCell(_ cell: CustomTableViewCell) {
+        cell.accessoryType = .detailDisclosureButton
     }
     
-    func configureCheckmark(for cell: UITableViewCell,with item: ChecklistItem) {
-        cell.accessoryType = item.checked ? .checkmark : .none
+    func configureText(for cell: CustomTableViewCell,with item: ChecklistItem) {
+        cell.texttLabel.text = item.text
+    }
+    
+    func configureCheckmark(for cell: CustomTableViewCell,with item: ChecklistItem) {
+        cell.checkLabel.text = item.checked ? "✔" : ""
     }
 }
 
@@ -117,17 +146,24 @@ extension ChecklistViewController {
     //MARK: - TableView Delegate Methods
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        if let currentCell = tableView.cellForRow(at: indexPath) {
+        if let currentCell = tableView.cellForRow(at: indexPath) as? CustomTableViewCell {
             let currentItem = checklistItems.itemArray[indexPath.row]
-            currentCell.accessoryType = currentItem.checked ? .none : .checkmark
+            currentCell.checkLabel.text = currentItem.checked ? "" : "✔"
             currentItem.toggleChecked()
         }
         
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
+    override func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
+        // You do lil bit of stuff here and then call perform seque, which will call prepare for segue method(in this method I will filter my segue from lot of segues using identifier). I could have created accessory action segue from the connection inspector of table view cell which would have called prepare for segue directly but in that case I can't do my own stuff before prepare for segue, hence using this method of UITableViewDelegate.
+        
+        performSegue(withIdentifier: "editItem", sender: indexPath)
+    }
+    
     /* This method makes the cell swipable and would be called when we tap on delete red button. */
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        
         checklistItems.remove(at: indexPath.row)
         
         tableView.deleteRows(at: [indexPath], with: .automatic)

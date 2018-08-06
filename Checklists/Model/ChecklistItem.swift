@@ -8,7 +8,8 @@
 
 import Foundation
 
-class ChecklistItem {
+/* NSObject class inherits from Equatable protocol. So indirectly we are making our "ChecklistItem" objects equatable by value, not by reference. Or this class can conform to Equatable protocol directly and then provide our custom implementation of "==" .  */
+class ChecklistItem : NSObject {
     
     var text : String
     var checked : Bool
