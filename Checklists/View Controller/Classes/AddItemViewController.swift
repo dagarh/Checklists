@@ -8,14 +8,6 @@
 
 import UIKit
 
-extension UITextField {
-    
-    @objc func returnKeyPressed(sender: UIButton, forEvent event: UIEvent) {
-        print("UITextField: Did end session of text field")
-    }
-    
-}
-
 
 class AddItemViewController: UITableViewController {
 
@@ -25,7 +17,8 @@ class AddItemViewController: UITableViewController {
         textField.delegate = self
         
         /* There are 2 ways through which you can set up an action for the events on UIElements. One way is through the delegates and another way is through the UIControl events. Now while using UIControl events, there are 2 ways. One is to create the action method for particular event from connection inspector by pressing ctrl and then drag. Another way is this which I did below i.e using "addTarget" method. Target could be nil, in that case event will look for its action method using the "Responder chain" hierarchy. If it does not find that action method then that event would be ignored by an iOS. */
-        textField.addTarget(nil, action: #selector(returnKeyPressed), for: UIControlEvents.editingDidEndOnExit)
+        textField.addTarget(nil, action: #selector(donePressed), for: UIControlEvents.editingDidEndOnExit)
+        /* editingDidEndOnExit --> even if you have a blank action method corresponding to this event, it would end session for the textfield, which is the first responder. Because its job is to end session of textField and hence it means textField would no longer to the first responder now.  */
         
     }
     
@@ -49,18 +42,12 @@ class AddItemViewController: UITableViewController {
         /* It is equivalent of dismiss method but while making use of navigation controller then use its own methods instead of using dismiss method because navigation bar is because of this navigation controller hence that navigation bar would not get dismissed by dismiss method. */
     }
     
-    /* This would be called from UIBarButtonItem and also from UITextField, that's why put any here. */
+    /* This would be called from UIBarButtonItem and also from UITextField, that's why "Any" is mandatory here. */
     @IBAction func donePressed(_ sender: Any) {
         print(type(of: sender))
         delegate?.addItemViewController(self, didFinishEditing: ChecklistItem(text: textField.text!, done: false))
         navigationController?.popViewController(animated: true)
     }
-    
-    @objc func returnKeyPressed(sender: UIButton, forEvent event: UIEvent) {
-        print("Did end session of text field")
-    }
-    
-   
     
     // MARK: - TableView Delegate Method
     
@@ -75,6 +62,7 @@ extension AddItemViewController : UITextFieldDelegate {
     
     // MARK: - TextField Delegate Methods
     
+    /* We could have used "Editing Changed" UIControl event and then create action method of that here. Through that way we could have got new updated text there directly and then we just had to check for isEmpty but it is ok to know this way too. */
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         // This would be called before changing the content. That's why we are able to take the oldText here.
         let oldText = textField.text!
