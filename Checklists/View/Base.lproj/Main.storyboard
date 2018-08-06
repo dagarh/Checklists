@@ -25,21 +25,31 @@
                                     <rect key="frame" x="0.0" y="0.0" width="342" height="43.666666666666664"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="CellLabel" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ILq-0L-R7t">
-                                            <rect key="frame" x="60" y="5" width="284" height="28"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="CellLabel" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ILq-0L-R7t">
+                                            <rect key="frame" x="42" y="5" width="295" height="33.666666666666664"/>
                                             <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="✔" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="W6A-qA-dXK">
-                                            <rect key="frame" x="20" y="5" width="27" height="28"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="✔" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="W6A-qA-dXK">
+                                            <rect key="frame" x="10" y="10.000000000000002" width="27" height="23.666666666666671"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="27" id="2xu-6q-brP"/>
+                                            </constraints>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
+                                    <constraints>
+                                        <constraint firstAttribute="trailing" secondItem="ILq-0L-R7t" secondAttribute="trailing" constant="5" id="01H-69-mAa"/>
+                                        <constraint firstAttribute="bottom" secondItem="ILq-0L-R7t" secondAttribute="bottom" constant="5" id="4Dh-3a-S4P"/>
+                                        <constraint firstItem="W6A-qA-dXK" firstAttribute="leading" secondItem="fMt-HR-dsT" secondAttribute="leading" constant="10" id="91Y-nO-gqg"/>
+                                        <constraint firstItem="ILq-0L-R7t" firstAttribute="top" secondItem="fMt-HR-dsT" secondAttribute="top" constant="5" id="YAs-Wd-yxW"/>
+                                        <constraint firstItem="ILq-0L-R7t" firstAttribute="leading" secondItem="W6A-qA-dXK" secondAttribute="trailing" constant="5" id="dBK-Vk-zCS"/>
+                                        <constraint firstItem="W6A-qA-dXK" firstAttribute="top" secondItem="fMt-HR-dsT" secondAttribute="top" constant="10" id="lnx-dZ-LKg"/>
+                                        <constraint firstAttribute="bottom" secondItem="W6A-qA-dXK" secondAttribute="bottom" constant="10" id="ryS-5c-fMW"/>
+                                    </constraints>
                                 </tableViewCellContentView>
                                 <connections>
                                     <outlet property="checkLabel" destination="W6A-qA-dXK" id="7AW-H9-RIv"/>
@@ -66,7 +76,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="c07-ly-cse" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1007.2463768115942" y="-25.271739130434785"/>
+            <point key="canvasLocation" x="1050.7246376811595" y="-60.326086956521742"/>
         </scene>
         <!--Add Item-->
         <scene sceneID="bxa-bc-Iso">

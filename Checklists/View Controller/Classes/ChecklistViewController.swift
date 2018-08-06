@@ -29,6 +29,9 @@ class ChecklistViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationController?.navigationBar.prefersLargeTitles = true
+        
+        /* For autoresizing follow this link : https://stackoverflow.com/questions/42453459/dynamically-adjust-the-height-of-the-tableview-cell-based-on-content-ios-swift. And don't forget to apply constraints if you want autoresizing of a cell. */
+        configureTableView()
     }
     
     override func didReceiveMemoryWarning() {
@@ -36,6 +39,11 @@ class ChecklistViewController: UITableViewController {
         // Dispose of any resources that can be recreated.
     }
  
+    func configureTableView() {
+        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.estimatedRowHeight = 120
+    }
+    
     //MARK: - Action Methods Connection
     @IBAction func addItem(_ sender: UIBarButtonItem) {
         performSegue(withIdentifier: "addItem", sender: self)
@@ -125,6 +133,10 @@ extension ChecklistViewController {
         
         return cell
         
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableViewAutomaticDimension
     }
     
     //MARK: - Some Configure Methods
