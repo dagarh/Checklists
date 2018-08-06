@@ -37,7 +37,6 @@ class ChecklistViewController: UITableViewController {
     }
  
     //MARK: - Action Methods Connection
-    
     @IBAction func addItem(_ sender: UIBarButtonItem) {
         performSegue(withIdentifier: "goToAddItem", sender: self)
     }
@@ -45,16 +44,6 @@ class ChecklistViewController: UITableViewController {
     //MARK: - Seque Related Method
     /* This method would get called by performSegue and for any kind of segue, this could be called hence make sure to filter things up. */
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        /*
-         /* If there was no segue then we could have done like this by creating the instance of AddItemViewController by our own and then setting the delegate, BUT since we have a seque hence we would make use of the instance, of AddItemViewController, which is created for us by segue. */
-         
-         let addItemVC = storyboard?.instantiateViewController(withIdentifier: "addItemVC") as! AddItemViewController
-         addItemVC.delegate = self
-         
-         /* we could have used "present" method here to present AddItemViewController but since we are making use of navigation controller and navigation bar is just because of this navigation controller, hence use navigationController provided method only. If we try to present controller with the help of 'present' method then we would not get navigation bar above in view controller.  */
-         navigationController?.pushViewController(addItemVC, animated: true)
-         */
-
         if segue.identifier == "goToAddItem" {
             let addItemVC = segue.destination as! AddItemViewController
             addItemVC.delegate = self
@@ -83,7 +72,6 @@ extension ChecklistViewController : AddItemViewControllerDelegate {
         // There could be multiple indexPaths so that you can insert multiple rows together.
         let indexPaths = [IndexPath(row: newRowIndex, section: 0)]
         
-        /* This would call cellForRowAt method and that will fetch the data from array for displaying the corresponding cell. This is a much better way than reloading the whole tableview. */
         tableView.insertRows(at: indexPaths, with: .automatic)
         
         /* Since we are sending the reference of "AddItemViewController" here, hence we can not pop it in AddItemViewController. */
@@ -104,12 +92,6 @@ extension ChecklistViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "ChecklistItem", for: indexPath)
-        
-        // cell.textLabel?.text = "Himanshu"
-        
-        /* you can create your own label for customised cells and use them like below using tag. 2 elements could have same tag on 2 diff-diff views.
-         
-         Instead we could have created separate class for the customised cell and then create outlets of all the UIelements. and then access already created instances from those outlets. This is how we do when there are more UI elements in a cell. */
         
         let item = checklistItems.itemArray[indexPath.row]
         configureText(for: cell, with: item)
@@ -133,7 +115,6 @@ extension ChecklistViewController {
 extension ChecklistViewController {
     
     //MARK: - TableView Delegate Methods
-    
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         if let currentCell = tableView.cellForRow(at: indexPath) {
@@ -149,7 +130,6 @@ extension ChecklistViewController {
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         checklistItems.remove(at: indexPath.row)
         
-        // there could be multiple indexPath if you want to delete more rows. This would inturn call cellForRowAt method. You could say reload whole tableView but that would be in-efficient.
         tableView.deleteRows(at: [indexPath], with: .automatic)
     }
 
