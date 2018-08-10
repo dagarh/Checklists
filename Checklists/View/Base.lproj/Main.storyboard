@@ -78,6 +78,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="addBarButton" destination="TQo-vz-xwu" id="uRg-ni-aSZ"/>
                         <segue destination="KXp-G2-AhU" kind="show" identifier="addItem" id="pdN-vn-VJr"/>
                         <segue destination="KXp-G2-AhU" kind="show" identifier="editItem" id="sk4-8W-Z26"/>
                     </connections>

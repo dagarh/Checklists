@@ -10,6 +10,8 @@ import UIKit
 
 class ChecklistViewController: UITableViewController {
     
+    @IBOutlet weak var addBarButton: UIBarButtonItem!
+    
     let checklistItems = ChecklistItems()
     
     // This is a failable initialiser.
@@ -84,6 +86,7 @@ class ChecklistViewController: UITableViewController {
         /* This super call is very important otherwise apple editing functionalities would not come. */
         super.setEditing(editing, animated: animated)
         print("Now you can provide your extra functionality here.")
+        addBarButton.isEnabled = !editing
     }
     
 }
