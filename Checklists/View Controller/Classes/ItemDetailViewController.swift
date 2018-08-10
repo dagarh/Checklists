@@ -39,7 +39,7 @@ class ItemDetailViewController: UITableViewController {
         delegate?.itemDetailViewControllerDidCancel(self)
     }
     
-    /* This would be called when pressing "+" or "Return" key of keyboard. */
+    /* This would be called when pressing "Done" or "Return" key of keyboard. */
     @IBAction func donePressed(_ sender: Any) {
         print(type(of: sender))
         if let itemToEdit = itemToEdit {
