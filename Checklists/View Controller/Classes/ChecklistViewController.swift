@@ -91,10 +91,8 @@ class ChecklistViewController: UITableViewController {
     
 }
 
+//MARK: - AddItemViewControllerDelegate Protocol Methods Implementation [For passing the data back from detailed screen using delegation pattern.]
 extension ChecklistViewController : ItemDetailViewControllerDelegate {
-    
-    //MARK: - AddItemViewControllerDelegate Protocol Methods Implementation
-    
     func itemDetailViewControllerDidCancel(_ controller: ItemDetailViewController) {
         
         // This will pop AddItemViewController screen.
@@ -126,20 +124,20 @@ extension ChecklistViewController : ItemDetailViewControllerDelegate {
         navigationController?.popViewController(animated: true)
         
     }
-    
-    
 }
 
+//MARK: - Table View Datasource methods
 extension ChecklistViewController {
     
-    //MARK: - Table View Datasource methods
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return checklistItems.itemArray.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
         let cell = tableView.dequeueReusableCell(withIdentifier: "ChecklistItem", for: indexPath) as! CustomTableViewCell
         
         configureCell(cell)
@@ -152,42 +150,25 @@ extension ChecklistViewController {
         
     }
     
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return UITableViewAutomaticDimension
-    }
-    
     //MARK: - Some Configure Methods
-    func configureCell(_ cell: CustomTableViewCell) {
+    private func configureCell(_ cell: CustomTableViewCell) {
         cell.accessoryType = .detailDisclosureButton
     }
     
-    func configureText(for cell: CustomTableViewCell,with item: ChecklistItem) {
+    private func configureText(for cell: CustomTableViewCell,with item: ChecklistItem) {
         cell.texttLabel.text = item.text
     }
     
-    func configureCheckmark(for cell: CustomTableViewCell,with item: ChecklistItem) {
+    private func configureCheckmark(for cell: CustomTableViewCell,with item: ChecklistItem) {
         cell.checkLabel.text = item.checked ? "✔" : ""
     }
-}
-
-extension ChecklistViewController {
     
-    //MARK: - TableView Delegate Methods
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
-        if let currentCell = tableView.cellForRow(at: indexPath) as? CustomTableViewCell {
-            let currentItem = checklistItems.itemArray[indexPath.row]
-            currentCell.checkLabel.text = currentItem.checked ? "" : "✔"
-            currentItem.toggleChecked()
-        }
-        
-        tableView.deselectRow(at: indexPath, animated: true)
-    }
     
-    override func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
-        // You do lil bit of stuff here and then call perform seque, which will call prepare for segue method(in this method I will filter my segue from lot of segues using identifier). I could have created accessory action segue from the connection inspector of table view cell which would have called prepare for segue directly but in that case I can't do my own stuff before prepare for segue, hence using this method of UITableViewDelegate.
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        /* This method would be called while a particular row gets edited by somemeans or when new row gets added. If this returns false then editing process or adding process would not happen. */
         
-        performSegue(withIdentifier: "editItem", sender: indexPath)
+        /* Since tableView is providing editing functionality directly, so this would also be called when editButtonItem gets clicked, which we set manually through code like this above : self.navigationItem.leftBarButtonItem = editButtonItem */
+        return true
     }
     
     /* This method makes the cell swipable and would be called when we tap on delete red button. */
@@ -202,15 +183,6 @@ extension ChecklistViewController {
         }
     }
     
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        /*
-         This method would be called while a particular row gets edited by somemeans or when new row gets added. If this returns false then editing process or adding process would not happen.
-         */
-        /*
-         Since tableView is providing editing functionality directly, so this would also be called when editButtonItem gets clicked, which we set manually through code like this above : self.navigationItem.leftBarButtonItem = editButtonItem
-         */
-        return true
-    }
     
     override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
         /* You can stop the process of moving by returning false here. Please note that this method is important and would be called only when "moveRowAt" is present. This would also be called at starting when showing editing symbols on right hand side but remember only when "moveRowAt" method is present. */
@@ -234,6 +206,29 @@ extension ChecklistViewController {
 
 }
 
+//MARK: - TableView Delegate Methods
+extension ChecklistViewController {
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableViewAutomaticDimension
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if let currentCell = tableView.cellForRow(at: indexPath) as? CustomTableViewCell {
+            let currentItem = checklistItems.itemArray[indexPath.row]
+            currentCell.checkLabel.text = currentItem.checked ? "" : "✔"
+            currentItem.toggleChecked()
+        }
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
+    override func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
+        // You do lil bit of stuff here and then call perform seque, which will call prepare for segue method(in this method I will filter my segue from lot of segues using identifier). I could have created accessory action segue from the connection inspector of table view cell which would have called prepare for segue directly but in that case I can't do my own stuff before prepare for segue, hence using this method of UITableViewDelegate.
+        
+        performSegue(withIdentifier: "editItem", sender: indexPath)
+    }
+}
+
+//MARK: - SearchBar Delegate Methods
 extension ChecklistViewController : UISearchBarDelegate {
     
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
@@ -247,8 +242,6 @@ extension ChecklistViewController : UISearchBarDelegate {
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searchBar.text = ""
         searchBar.resignFirstResponder()
-        
-        
     }
     
 }

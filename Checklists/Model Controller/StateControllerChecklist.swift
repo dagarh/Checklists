@@ -9,15 +9,14 @@
 import Foundation
 
 class ChecklistItems {
-    
+        
     var itemArray = [ChecklistItem]()
 
     /*
      This only needs to be called when you are fetching persisted data from db.
-     func fetchDataFromDB() {
-     
-     }
      */
+     func fetchDataFromDB() {
+     }
     
     func append(_ item: ChecklistItem){
         itemArray.append(item)
